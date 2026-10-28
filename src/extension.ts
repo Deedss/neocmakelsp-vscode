@@ -3,6 +3,8 @@ import * as vscode from 'vscode';
 import * as targets from './targets';
 
 import * as os from 'node:os';
+import * as fs from 'node:fs';
+import * as nodePath from 'node:path';
 
 import {
   LanguageClient,
@@ -86,7 +88,19 @@ export class NeocmakeContext implements vscode.Disposable {
       };
     } else {
       let realPath = get<string>('path');
-      if (localtarget !== true) {
+      const bundled = nodePath.join(
+        context.extensionPath,
+        'server',
+        platform === 'win32' ? 'neocmakelsp.exe' : 'neocmakelsp'
+      );
+      if (localtarget !== true && fs.existsSync(bundled)) {
+        // Use the binary shipped inside the .vsix; skip the GitHub download.
+        if (platform !== 'win32') {
+          // vsix extraction does not always preserve the executable bit
+          await fs.promises.chmod(bundled, 0o755).catch(() => undefined);
+        }
+        realPath = bundled;
+      } else if (localtarget !== true) {
         const exPath = context.extensionPath;
 
         const path = await installLatestNeocmakeLsp(exPath);

@@ -1,3 +1,9 @@
+# NOTICE
+
+This is a fork of the neocmakelsp-vscode plugin made by Decodetalkers. 
+It ships a version of the neocmakelsp binary build on Almalinux 8 (glibc < 2.28) with it.
+All credits go to Decodetalkers for the amazing plugin / lsp.
+
 # neocmakelsp vscode plugin
 
 This plugin is for [neocmakelsp](https://github.com/Decodetalkers/neocmakelsp)
